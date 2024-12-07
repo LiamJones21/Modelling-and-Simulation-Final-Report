@@ -1,0 +1,841 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Wolfram 14.1' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       154,          7]
+NotebookDataLength[     37711,        833]
+NotebookOptionsPosition[     37199,        815]
+NotebookOutlinePosition[     37617,        832]
+CellTagsIndexPosition[     37574,        829]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{
+    "Population", " ", "Dynamics", " ", "Equations", " ", "with", " ", 
+     "Non"}], "-", 
+    RowBox[{"Negative", " ", "Food", " ", "Reserves"}]}], "*)"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"farmerWarriorUpdate", "=", 
+     RowBox[{"Function", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+        "state", ",", "alpha", ",", "beta", ",", "gamma", ",", "delta", ",", 
+         "lambda", ",", "sigma", ",", "theta", ",", "epsilon"}], "}"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"Module", "[", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"{", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"F", "=", 
+            RowBox[{"state", "[", 
+             RowBox[{"[", "1", "]"}], "]"}]}], ",", "\[IndentingNewLine]", 
+           RowBox[{"Nf", "=", 
+            RowBox[{"state", "[", 
+             RowBox[{"[", "2", "]"}], "]"}]}], ",", "\[IndentingNewLine]", 
+           RowBox[{"Nw", "=", 
+            RowBox[{"state", "[", 
+             RowBox[{"[", "3", "]"}], "]"}]}], ",", "\[IndentingNewLine]", 
+           "gammaEff", ",", "\[IndentingNewLine]", "deltaEff", ",", 
+           "\[IndentingNewLine]", "dFdt"}], "\[IndentingNewLine]", "}"}], ",",
+          "\[IndentingNewLine]", 
+         RowBox[{"(*", 
+          RowBox[{
+           RowBox[{"Ensure", " ", "non"}], "-", 
+           RowBox[{"negative", " ", "food"}]}], "*)"}], "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"F", "=", 
+           RowBox[{"Max", "[", 
+            RowBox[{"F", ",", "0"}], "]"}]}], ";", "\[IndentingNewLine]", 
+          "\[IndentingNewLine]", 
+          RowBox[{"(*", 
+           RowBox[{
+           "Adjust", " ", "death", " ", "rates", " ", "during", " ", 
+            "famine"}], "*)"}], " ", "\[IndentingNewLine]", 
+          RowBox[{"gammaEff", "=", 
+           RowBox[{"If", "[", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"F", "<=", "0"}], ",", "\[IndentingNewLine]", 
+             RowBox[{"gamma", "+", "epsilon"}], ",", "\[IndentingNewLine]", 
+             "gamma"}], "]"}]}], ";", "\[IndentingNewLine]", 
+          "\[IndentingNewLine]", 
+          RowBox[{"(*", 
+           RowBox[{
+            RowBox[{"Food", " ", "dynamics", " ", "with", " ", "non"}], "-", 
+            RowBox[{"negative", " ", "enforcement"}]}], "*)"}], 
+          "\[IndentingNewLine]", 
+          RowBox[{"deltaEff", "=", 
+           RowBox[{"If", "[", " ", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"F", "<=", "0"}], ",", "\[IndentingNewLine]", 
+             RowBox[{"delta", "+", "epsilon"}], ",", "\[IndentingNewLine]", 
+             "delta"}], "\[IndentingNewLine]", "]"}]}], ";", 
+          "\[IndentingNewLine]", "\[IndentingNewLine]", 
+          RowBox[{"dFdt", "=", 
+           RowBox[{
+            RowBox[{"alpha", " ", "Nf"}], "-", 
+            RowBox[{"beta", " ", 
+             RowBox[{"(", 
+              RowBox[{"Nf", "+", "Nw"}], ")"}]}]}]}], ";", 
+          "\[IndentingNewLine]", "\[IndentingNewLine]", 
+          RowBox[{"dFdt", "=", 
+           RowBox[{"If", "[", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"F", "+", "dFdt"}], "<", "0"}], ",", 
+             "\[IndentingNewLine]", 
+             RowBox[{"-", "F"}], ",", "\[IndentingNewLine]", "dFdt"}], 
+            "\[IndentingNewLine]", "]"}]}], ";", "\[IndentingNewLine]", 
+          "\[IndentingNewLine]", 
+          RowBox[{"{", "\[IndentingNewLine]", 
+           RowBox[{"dFdt", ",", 
+            RowBox[{"(*", 
+             RowBox[{"dF", "/", "dt"}], "*)"}], "\[IndentingNewLine]", 
+            "\[IndentingNewLine]", 
+            RowBox[{"(*", 
+             RowBox[{"dNf", "/", "dt"}], "*)"}], "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"-", 
+              RowBox[{"If", "[", "\[IndentingNewLine]", 
+               RowBox[{
+                RowBox[{"F", ">", "theta"}], ",", "\[IndentingNewLine]", 
+                RowBox[{"sigma", " ", "Nf"}], ",", "\[IndentingNewLine]", 
+                "0"}], "\[IndentingNewLine]", "]"}]}], "-", 
+             RowBox[{"gammaEff", " ", "Nf"}], "+", 
+             RowBox[{"lambda", " ", 
+              RowBox[{"F", "/", 
+               RowBox[{"(", 
+                RowBox[{"1", "+", "F"}], ")"}]}]}]}], ",", 
+            "\[IndentingNewLine]", "\[IndentingNewLine]", 
+            RowBox[{"(*", 
+             RowBox[{"dNw", "/", "dt"}], "*)"}], "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"If", "[", "\[IndentingNewLine]", 
+              RowBox[{
+               RowBox[{"F", ">", "theta"}], ",", "\[IndentingNewLine]", 
+               RowBox[{"sigma", " ", "Nf"}], ",", "\[IndentingNewLine]", 
+               "0"}], "\[IndentingNewLine]", "]"}], "-", 
+             RowBox[{"deltaEff", " ", "Nw"}]}]}], " ", "\[IndentingNewLine]", 
+           "}"}]}]}], "]"}]}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+   "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{"RK4", 
+     RowBox[{"(", "5", ")"}], " ", "Integration", " ", "Function"}], "*)"}], 
+   "\n", 
+   RowBox[{
+    RowBox[{"rk45FarmersWarriors", "=", 
+     RowBox[{"Function", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"f", ",", "h", ",", "state"}], "}"}], ",", 
+       RowBox[{"Module", "[", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{
+          "k1", ",", "k2", ",", "k3", ",", "k4", ",", "k5", ",", "k6", ",", 
+           "newState"}], "}"}], ",", 
+         RowBox[{
+          RowBox[{"k1", "=", 
+           RowBox[{"f", "[", "state", "]"}]}], ";", "\[IndentingNewLine]", 
+          RowBox[{"k2", "=", 
+           RowBox[{"f", "[", 
+            RowBox[{"state", "+", 
+             RowBox[{"h", " ", 
+              RowBox[{"k1", "/", "4"}]}]}], "]"}]}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"k3", "=", 
+           RowBox[{"f", "[", 
+            RowBox[{"state", "+", 
+             RowBox[{"h", " ", 
+              RowBox[{
+               RowBox[{"(", 
+                RowBox[{
+                 RowBox[{"3", " ", "k1"}], "+", 
+                 RowBox[{"9", " ", "k2"}]}], ")"}], "/", "32"}]}]}], "]"}]}], 
+          ";", "\[IndentingNewLine]", 
+          RowBox[{"k4", "=", 
+           RowBox[{"f", "[", 
+            RowBox[{"state", "+", 
+             RowBox[{"h", " ", 
+              RowBox[{
+               RowBox[{"(", 
+                RowBox[{
+                 RowBox[{"1932", " ", "k1"}], "-", 
+                 RowBox[{"7200", " ", "k2"}], "+", 
+                 RowBox[{"7296", " ", "k3"}]}], ")"}], "/", "2197"}]}]}], 
+            "]"}]}], ";", "\[IndentingNewLine]", 
+          RowBox[{"k5", "=", 
+           RowBox[{"f", "[", 
+            RowBox[{"state", "+", 
+             RowBox[{"h", " ", 
+              RowBox[{"(", 
+               RowBox[{
+                RowBox[{"439", " ", 
+                 RowBox[{"k1", "/", "216"}]}], "-", 
+                RowBox[{"8", " ", "k2"}], "+", 
+                RowBox[{"3680", " ", 
+                 RowBox[{"k3", "/", "513"}]}], "-", 
+                RowBox[{"845", " ", 
+                 RowBox[{"k4", "/", "4104"}]}]}], ")"}]}]}], "]"}]}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"k6", "=", 
+           RowBox[{"f", "[", 
+            RowBox[{"state", "+", 
+             RowBox[{"h", " ", 
+              RowBox[{"(", 
+               RowBox[{
+                RowBox[{
+                 RowBox[{"-", "8"}], " ", 
+                 RowBox[{"k1", "/", "27"}]}], "+", 
+                RowBox[{"2", " ", "k2"}], "-", 
+                RowBox[{"3544", " ", 
+                 RowBox[{"k3", "/", "2565"}]}], "+", 
+                RowBox[{"1859", " ", 
+                 RowBox[{"k4", "/", "4104"}]}], "-", 
+                RowBox[{"11", " ", 
+                 RowBox[{"k5", "/", "40"}]}]}], ")"}]}]}], "]"}]}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"newState", "=", 
+           RowBox[{"state", "+", 
+            RowBox[{"h", " ", 
+             RowBox[{"(", 
+              RowBox[{
+               RowBox[{"16", " ", 
+                RowBox[{"k1", "/", "135"}]}], "+", 
+               RowBox[{"6656", " ", 
+                RowBox[{"k3", "/", "12825"}]}], "+", 
+               RowBox[{"28561", " ", 
+                RowBox[{"k4", "/", "56430"}]}], "-", 
+               RowBox[{"9", " ", 
+                RowBox[{"k5", "/", "50"}]}], "+", 
+               RowBox[{"2", " ", 
+                RowBox[{"k6", "/", "55"}]}]}], ")"}]}]}]}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"(*", " ", 
+           RowBox[{
+            RowBox[{"Food", " ", "is", " ", "non"}], "-", "negative"}], 
+           "*)"}], 
+          RowBox[{
+           RowBox[{"newState", "[", 
+            RowBox[{"[", "1", "]"}], "]"}], "=", 
+           RowBox[{"Max", "[", 
+            RowBox[{
+             RowBox[{"newState", "[", 
+              RowBox[{"[", "1", "]"}], "]"}], ",", "0"}], "]"}]}], ";", 
+          "\[IndentingNewLine]", "newState"}]}], "]"}]}], "]"}]}], ";"}], 
+   "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{"Simulation", " ", "Function"}], "*)"}], "\n", 
+   RowBox[{
+    RowBox[{"simulateFarmersWarriors", "=", 
+     RowBox[{"Function", "[", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+        "alpha", ",", "beta", ",", "gamma", ",", "delta", ",", "lambda", ",", 
+         "sigma", ",", "theta", ",", "epsilon", ",", "stepSize", ",", "tMax", 
+         ",", "F0", ",", "Nf0", ",", "Nw0"}], "}"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"Module", "[", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"initialState", ",", "steps", ",", "results", ",", "f"}], 
+          "}"}], ",", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"initialState", "=", 
+           RowBox[{"{", 
+            RowBox[{"F0", ",", "Nf0", ",", "Nw0"}], "}"}]}], ";", 
+          "\[IndentingNewLine]", "\[IndentingNewLine]", 
+          RowBox[{"steps", "=", 
+           RowBox[{"Range", "[", 
+            RowBox[{"0", ",", "tMax", ",", "stepSize"}], "]"}]}], ";", 
+          "\[IndentingNewLine]", "\[IndentingNewLine]", 
+          RowBox[{"f", "=", 
+           RowBox[{"Function", "[", 
+            RowBox[{"state", ",", 
+             RowBox[{"farmerWarriorUpdate", "[", 
+              RowBox[{
+              "state", ",", "alpha", ",", "beta", ",", "gamma", ",", "delta", 
+               ",", "lambda", ",", "sigma", ",", "theta", ",", "epsilon"}], 
+              "]"}]}], "]"}]}], ";", "\[IndentingNewLine]", 
+          "\[IndentingNewLine]", 
+          RowBox[{"results", "=", 
+           RowBox[{"NestList", "[", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"rk45FarmersWarriors", "[", 
+               RowBox[{"f", ",", "stepSize", ",", "#"}], "]"}], "&"}], ",", 
+             "initialState", ",", 
+             RowBox[{
+              RowBox[{"Length", "[", "steps", "]"}], "-", "1"}]}], "]"}]}], 
+          ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+          RowBox[{"{", 
+           RowBox[{"steps", ",", 
+            RowBox[{"Transpose", "[", "results", "]"}]}], "}"}]}]}], 
+        "\[IndentingNewLine]", "]"}]}], "]"}]}], ";"}], "\n", 
+   "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{"Phase", " ", "Diagram", " ", "with", " ", "StreamPlot"}], "*)"}],
+    "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"plotPhaseDiagram", "=", 
+     RowBox[{"Function", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+        "alpha", ",", "beta", ",", "gamma", ",", "delta", ",", "lambda", ",", 
+         "sigma", ",", "theta", ",", "epsilon", ",", "stepSize", ",", "tMax", 
+         ",", "F0", ",", "Nf0", ",", "Nw0"}], "}"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"Module", "[", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"timeData", ",", "data", ",", "vectorField"}], "}"}], ",", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{"timeData", ",", "data"}], "}"}], "=", 
+           RowBox[{"simulateFarmersWarriors", "[", 
+            RowBox[{
+            "alpha", ",", "beta", ",", "gamma", ",", "delta", ",", "lambda", 
+             ",", "sigma", ",", "theta", ",", "epsilon", ",", "stepSize", ",",
+              "tMax", ",", "F0", ",", "Nf0", ",", "Nw0"}], "]"}]}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"vectorField", "=", 
+           RowBox[{"Function", "[", 
+            RowBox[{
+             RowBox[{"{", 
+              RowBox[{"F", ",", "Nf"}], "}"}], ",", 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"alpha", " ", "Nf"}], "-", 
+                RowBox[{"beta", " ", 
+                 RowBox[{"(", 
+                  RowBox[{"Nf", "+", "Nw0"}], ")"}]}]}], ",", 
+               RowBox[{
+                RowBox[{"-", 
+                 RowBox[{"If", "[", 
+                  RowBox[{
+                   RowBox[{"F", ">", "theta"}], ",", 
+                   RowBox[{"sigma", " ", "Nf"}], ",", "0"}], "]"}]}], "-", 
+                RowBox[{"gamma", " ", "Nf"}], "+", 
+                RowBox[{"lambda", " ", 
+                 RowBox[{"F", "/", 
+                  RowBox[{"(", 
+                   RowBox[{"1", "+", "F"}], ")"}]}]}]}]}], "}"}]}], "]"}]}], 
+          ";", "\[IndentingNewLine]", 
+          RowBox[{"Show", "[", 
+           RowBox[{
+            RowBox[{"StreamPlot", "[", 
+             RowBox[{
+              RowBox[{"vectorField", "[", 
+               RowBox[{"F", ",", "Nf"}], "]"}], ",", 
+              RowBox[{"{", 
+               RowBox[{"F", ",", "0", ",", "500"}], "}"}], ",", 
+              RowBox[{"{", 
+               RowBox[{"Nf", ",", "0", ",", "100"}], "}"}], ",", 
+              RowBox[{"StreamStyle", "->", 
+               RowBox[{"Arrowheads", "[", "Small", "]"}]}], ",", 
+              RowBox[{"Frame", "->", "True"}], ",", 
+              RowBox[{"FrameLabel", "->", 
+               RowBox[{"{", 
+                RowBox[{
+                "\"\<Food Reserves (F)\>\"", ",", "\"\<Farmers (Nf)\>\""}], 
+                "}"}]}], ",", 
+              RowBox[{"PlotRange", "->", 
+               RowBox[{"{", 
+                RowBox[{
+                 RowBox[{"{", 
+                  RowBox[{"0", ",", "500"}], "}"}], ",", 
+                 RowBox[{"{", 
+                  RowBox[{"0", ",", "100"}], "}"}]}], "}"}]}], ",", 
+              RowBox[{"AspectRatio", "->", 
+               RowBox[{"2", "/", "3"}]}]}], "]"}], ",", 
+            RowBox[{"Graphics", "[", 
+             RowBox[{"{", 
+              RowBox[{"Thick", ",", "Red", ",", 
+               RowBox[{"Line", "[", 
+                RowBox[{"Transpose", "[", 
+                 RowBox[{"{", 
+                  RowBox[{
+                   RowBox[{"data", "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], ",", 
+                   RowBox[{"data", "[", 
+                    RowBox[{"[", "2", "]"}], "]"}]}], "}"}], "]"}], "]"}]}], 
+              "}"}], "]"}]}], "]"}]}]}], "]"}]}], "]"}]}], ";"}], "\n", 
+   "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{"Manipulate", " ", "Block", " ", "with", " ", "Non"}], "-", 
+     RowBox[{"Negative", " ", "Food", " ", "Reserves"}]}], "*)"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{"Manipulate", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"Module", "[", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"data", ",", "timeData", ",", "phasePlot"}], "}"}], ",", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"timeData", ",", "data"}], "}"}], "=", 
+         RowBox[{"simulateFarmersWarriors", "[", 
+          RowBox[{
+          "alpha", ",", "beta", ",", "gamma", ",", "delta", ",", "lambda", 
+           ",", "sigma", ",", "theta", ",", "epsilon", ",", "stepSize", ",", 
+           "tMax", ",", "F0", ",", "Nf0", ",", "Nw0"}], "]"}]}], ";", 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", 
+        RowBox[{"phasePlot", "=", 
+         RowBox[{"plotPhaseDiagram", "[", 
+          RowBox[{
+          "alpha", ",", "beta", ",", "gamma", ",", "delta", ",", "lambda", 
+           ",", "sigma", ",", "theta", ",", "epsilon", ",", "stepSize", ",", 
+           "tMax", ",", "F0", ",", "Nf0", ",", "Nw0"}], "]"}]}], ";", 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", 
+        RowBox[{"Column", "[", "\[IndentingNewLine]", 
+         RowBox[{"{", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"ListLinePlot", "[", 
+            RowBox[{
+             RowBox[{"Transpose", "[", 
+              RowBox[{"{", 
+               RowBox[{"timeData", ",", 
+                RowBox[{"data", "[", 
+                 RowBox[{"[", "1", "]"}], "]"}]}], "}"}], "]"}], ",", 
+             RowBox[{"PlotRange", "->", "All"}], ",", 
+             RowBox[{"PlotStyle", "->", "Blue"}], ",", 
+             RowBox[{"Frame", "->", "True"}], ",", 
+             RowBox[{"FrameLabel", "->", 
+              RowBox[{"{", 
+               RowBox[{"\"\<Time\>\"", ",", "\"\<Food Reserves (F)\>\""}], 
+               "}"}]}], ",", 
+             RowBox[{"ImageSize", "->", "Large"}]}], "]"}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{"ListLinePlot", "[", 
+            RowBox[{
+             RowBox[{"{", "\[IndentingNewLine]", 
+              RowBox[{
+               RowBox[{"Transpose", "[", 
+                RowBox[{"{", 
+                 RowBox[{"timeData", ",", 
+                  RowBox[{"data", "[", 
+                   RowBox[{"[", "2", "]"}], "]"}]}], "}"}], "]"}], ",", 
+               "\[IndentingNewLine]", 
+               RowBox[{"Transpose", "[", 
+                RowBox[{"{", 
+                 RowBox[{"timeData", ",", 
+                  RowBox[{"data", "[", 
+                   RowBox[{"[", "3", "]"}], "]"}]}], "}"}], "]"}]}], "}"}], 
+             ",", "\[IndentingNewLine]", 
+             RowBox[{"PlotRange", "->", "All"}], ",", 
+             RowBox[{"PlotStyle", "->", 
+              RowBox[{"{", 
+               RowBox[{"Green", ",", "Red"}], "}"}]}], ",", 
+             RowBox[{"Frame", "->", "True"}], ",", "\[IndentingNewLine]", 
+             RowBox[{"FrameLabel", "->", 
+              RowBox[{"{", 
+               RowBox[{"\"\<Time\>\"", ",", "\"\<Population\>\""}], "}"}]}], 
+             ",", "\[IndentingNewLine]", 
+             RowBox[{"PlotLegends", "->", 
+              RowBox[{"{", 
+               RowBox[{"\"\<Farmers (Nf)\>\"", ",", "\"\<Warriors (Nw)\>\""}],
+                "}"}]}], ",", "\[IndentingNewLine]", 
+             RowBox[{"ImageSize", "->", "Large"}]}], "\[IndentingNewLine]", 
+            "]"}], ",", "\[IndentingNewLine]", "phasePlot"}], "}"}], 
+         "]"}]}]}], "]"}], ",", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+     
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+        "alpha", ",", "1.", ",", "\"\<Food Production Rate (\[Alpha])\>\""}], 
+        "}"}], ",", "0.1", ",", "3.", ",", "0.1"}], "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+        "beta", ",", "0.5", ",", "\"\<Food Consumption Rate (\[Beta])\>\""}], 
+        "}"}], ",", "0.1", ",", "2.0", ",", "0.1"}], "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+        "gamma", ",", "0.01", ",", "\"\<Farmer Death Rate (\[Gamma])\>\""}], 
+        "}"}], ",", "0.001", ",", "0.1", ",", "0.001"}], "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+        "delta", ",", "0.02", ",", "\"\<Warrior Death Rate (\[Delta])\>\""}], 
+        "}"}], ",", "0.01", ",", "0.2", ",", "0.01"}], "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"lambda", ",", "1.0", ",", "\"\<Birth Rate (\[Lambda])\>\""}],
+         "}"}], ",", "0.1", ",", "3.0", ",", "0.1"}], "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+        "sigma", ",", "0.1", ",", 
+         "\"\<Warrior Recruitment Rate (\[Sigma])\>\""}], "}"}], ",", "0.01", 
+       ",", "0.5", ",", "0.01"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+        "theta", ",", "200", ",", 
+         "\"\<Food Threshold for War (\[Theta])\>\""}], "}"}], ",", "50", ",",
+        "500", ",", "10"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+        "epsilon", ",", "0.05", ",", 
+         "\"\<Famine Death Rate Increase (\[Epsilon])\>\""}], "}"}], ",", 
+       "0.01", ",", "0.2", ",", "0.01"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+        "F0", ",", "100", ",", "\"\<Initial Food Reserves (F\:2080)\>\""}], 
+        "}"}], ",", "50", ",", "300", ",", "10"}], "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"Nf0", ",", "80", ",", "\"\<Initial Farmers (Nf\:2080)\>\""}],
+         "}"}], ",", "30", ",", "150", ",", "10"}], "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+        "Nw0", ",", "20", ",", "\"\<Initial Warriors (Nw\:2080)\>\""}], "}"}],
+        ",", "0", ",", "50", ",", "5"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"stepSize", ",", "0.1", ",", "\"\<Step Size\>\""}], "}"}], 
+       ",", "0.001", ",", "1.0", ",", "0.001"}], "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"tMax", ",", "150", ",", "\"\<Total Time\>\""}], "}"}], ",", 
+       "10", ",", "300", ",", "10"}], "}"}], ",", "\[IndentingNewLine]", 
+     "\[IndentingNewLine]", 
+     RowBox[{"ControlPlacement", "->", "Left"}], ",", 
+     RowBox[{"SaveDefinitions", "->", "True"}]}], "]"}]}]}]], "Input",
+ CellChangeTimes->{{3.9425528828894663`*^9, 3.9425529590887337`*^9}, {
+  3.942553081972684*^9, 3.94255309267771*^9}, {3.942553192467461*^9, 
+  3.9425533565661507`*^9}, {3.942553642463725*^9, 3.94255381062754*^9}, {
+  3.94255393312221*^9, 
+  3.9425539402978697`*^9}},ExpressionUUID->"169d5835-bea0-4fd7-b917-\
+906bbd018377"],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`alpha$$ = 1., $CellContext`beta$$ = 
+    0.5, $CellContext`delta$$ = 0.02, $CellContext`epsilon$$ = 
+    0.05, $CellContext`F0$$ = 100, $CellContext`gamma$$ = 
+    0.01, $CellContext`lambda$$ = 1., $CellContext`Nf0$$ = 
+    80, $CellContext`Nw0$$ = 20, $CellContext`sigma$$ = 
+    0.1, $CellContext`stepSize$$ = 0.1, $CellContext`theta$$ = 
+    200, $CellContext`tMax$$ = 150, Typeset`show$$ = True, 
+    Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
+    Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
+    "\"untitled\"", Typeset`specs$$ = {{{
+       Hold[$CellContext`alpha$$], 1., "Food Production Rate (\[Alpha])"}, 
+      0.1, 3., 0.1, ControlType -> Manipulator}, {{
+       Hold[$CellContext`beta$$], 0.5, "Food Consumption Rate (\[Beta])"}, 
+      0.1, 2., 0.1, ControlType -> Manipulator}, {{
+       Hold[$CellContext`gamma$$], 0.01, "Farmer Death Rate (\[Gamma])"}, 
+      0.001, 0.1, 0.001, ControlType -> Manipulator}, {{
+       Hold[$CellContext`delta$$], 0.02, "Warrior Death Rate (\[Delta])"}, 
+      0.01, 0.2, 0.01, ControlType -> Manipulator}, {{
+       Hold[$CellContext`lambda$$], 1., "Birth Rate (\[Lambda])"}, 0.1, 3., 
+      0.1, ControlType -> Manipulator}, {{
+       Hold[$CellContext`sigma$$], 0.1, 
+       "Warrior Recruitment Rate (\[Sigma])"}, 0.01, 0.5, 0.01, ControlType -> 
+      Manipulator}, {{
+       Hold[$CellContext`theta$$], 200, "Food Threshold for War (\[Theta])"}, 
+      50, 500, 10, ControlType -> Manipulator}, {{
+       Hold[$CellContext`epsilon$$], 0.05, 
+       "Famine Death Rate Increase (\[Epsilon])"}, 0.01, 0.2, 0.01, 
+      ControlType -> Manipulator}, {{
+       Hold[$CellContext`F0$$], 100, "Initial Food Reserves (F\:2080)"}, 50, 
+      300, 10, ControlType -> Manipulator}, {{
+       Hold[$CellContext`Nf0$$], 80, "Initial Farmers (Nf\:2080)"}, 30, 150, 
+      10, ControlType -> Manipulator}, {{
+       Hold[$CellContext`Nw0$$], 20, "Initial Warriors (Nw\:2080)"}, 0, 50, 5,
+       ControlType -> Manipulator}, {{
+       Hold[$CellContext`stepSize$$], 0.1, "Step Size"}, 0.001, 1., 0.001, 
+      ControlType -> Manipulator}, {{
+       Hold[$CellContext`tMax$$], 150, "Total Time"}, 10, 300, 10, 
+      ControlType -> Manipulator}}, Typeset`size$$ = {
+    1046.777783203125, {648.0182036684638, 656.6161040590888}}, 
+    Typeset`update$$ = 0, Typeset`initDone$$, Typeset`skipInitDone$$ = False, 
+    Typeset`keyframeActionsQ$$ = False, Typeset`keyframeList$$ = {}}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, 
+      "Variables" :> {$CellContext`alpha$$ = 1., $CellContext`beta$$ = 
+        0.5, $CellContext`delta$$ = 0.02, $CellContext`epsilon$$ = 
+        0.05, $CellContext`F0$$ = 100, $CellContext`gamma$$ = 
+        0.01, $CellContext`lambda$$ = 1., $CellContext`Nf0$$ = 
+        80, $CellContext`Nw0$$ = 20, $CellContext`sigma$$ = 
+        0.1, $CellContext`stepSize$$ = 0.1, $CellContext`theta$$ = 
+        200, $CellContext`tMax$$ = 150}, "ControllerVariables" :> {}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$, Typeset`keyframeActionsQ$$, 
+        Typeset`keyframeList$$}, "Body" :> 
+      Module[{$CellContext`data$, $CellContext`timeData$, \
+$CellContext`phasePlot$}, {$CellContext`timeData$, $CellContext`data$} = \
+$CellContext`simulateFarmersWarriors[$CellContext`alpha$$, \
+$CellContext`beta$$, $CellContext`gamma$$, $CellContext`delta$$, \
+$CellContext`lambda$$, $CellContext`sigma$$, $CellContext`theta$$, \
+$CellContext`epsilon$$, $CellContext`stepSize$$, $CellContext`tMax$$, \
+$CellContext`F0$$, $CellContext`Nf0$$, $CellContext`Nw0$$]; \
+$CellContext`phasePlot$ = $CellContext`plotPhaseDiagram[$CellContext`alpha$$, \
+$CellContext`beta$$, $CellContext`gamma$$, $CellContext`delta$$, \
+$CellContext`lambda$$, $CellContext`sigma$$, $CellContext`theta$$, \
+$CellContext`epsilon$$, $CellContext`stepSize$$, $CellContext`tMax$$, \
+$CellContext`F0$$, $CellContext`Nf0$$, $CellContext`Nw0$$]; Column[{
+           ListLinePlot[
+            Transpose[{$CellContext`timeData$, 
+              Part[$CellContext`data$, 1]}], PlotRange -> All, PlotStyle -> 
+            Blue, Frame -> True, FrameLabel -> {"Time", "Food Reserves (F)"}, 
+            ImageSize -> Large], 
+           ListLinePlot[{
+             Transpose[{$CellContext`timeData$, 
+               Part[$CellContext`data$, 2]}], 
+             Transpose[{$CellContext`timeData$, 
+               Part[$CellContext`data$, 3]}]}, PlotRange -> All, 
+            PlotStyle -> {Green, Red}, Frame -> True, 
+            FrameLabel -> {"Time", "Population"}, 
+            PlotLegends -> {"Farmers (Nf)", "Warriors (Nw)"}, ImageSize -> 
+            Large], $CellContext`phasePlot$}]], 
+      "Specifications" :> {{{$CellContext`alpha$$, 1., 
+          "Food Production Rate (\[Alpha])"}, 0.1, 3., 
+         0.1}, {{$CellContext`beta$$, 0.5, "Food Consumption Rate (\[Beta])"},
+          0.1, 2., 
+         0.1}, {{$CellContext`gamma$$, 0.01, "Farmer Death Rate (\[Gamma])"}, 
+         0.001, 0.1, 
+         0.001}, {{$CellContext`delta$$, 0.02, 
+          "Warrior Death Rate (\[Delta])"}, 0.01, 0.2, 
+         0.01}, {{$CellContext`lambda$$, 1., "Birth Rate (\[Lambda])"}, 0.1, 
+         3., 0.1}, {{$CellContext`sigma$$, 0.1, 
+          "Warrior Recruitment Rate (\[Sigma])"}, 0.01, 0.5, 
+         0.01}, {{$CellContext`theta$$, 200, 
+          "Food Threshold for War (\[Theta])"}, 50, 500, 
+         10}, {{$CellContext`epsilon$$, 0.05, 
+          "Famine Death Rate Increase (\[Epsilon])"}, 0.01, 0.2, 
+         0.01}, {{$CellContext`F0$$, 100, "Initial Food Reserves (F\:2080)"}, 
+         50, 300, 
+         10}, {{$CellContext`Nf0$$, 80, "Initial Farmers (Nf\:2080)"}, 30, 
+         150, 10}, {{$CellContext`Nw0$$, 20, "Initial Warriors (Nw\:2080)"}, 
+         0, 50, 5}, {{$CellContext`stepSize$$, 0.1, "Step Size"}, 0.001, 1., 
+         0.001}, {{$CellContext`tMax$$, 150, "Total Time"}, 10, 300, 10}}, 
+      "Options" :> {ControlPlacement -> Left}, "DefaultOptions" :> {}],
+     ImageSizeCache->{
+      1631.9043066406248`, {689.1738417910225, 697.7717421816475}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    Initialization:>({$CellContext`phasePlot = Function[$CellContext`f$, 
+         Manipulate[
+          
+          Module[{$CellContext`sign$ = 
+            D[$CellContext`f$, $CellContext`x] > 0, $CellContext`nodes$ = 
+            Select[Element[#, Reals]& ][
+              ReplaceAll[$CellContext`x, 
+               Solve[$CellContext`f$ == 0, $CellContext`x]]]}, 
+           
+           Plot[$CellContext`f$, {$CellContext`x, -3, 3}, 
+            PlotRange -> {-5, 5}, Epilog -> {
+              PointSize[Large], 
+              Point[
+               Map[{#, 0}& ][
+                Select[Not[
+                  
+                  ReplaceAll[$CellContext`sign$, $CellContext`x -> #]]& \
+][$CellContext`nodes$]]], 
+              Point[
+               Map[{#, 0}& ][
+                Select[
+                ReplaceAll[$CellContext`sign$, $CellContext`x -> #]& \
+][$CellContext`nodes$]]], White, 
+              Point[
+               Map[{#, 0}& ][
+                Select[
+                ReplaceAll[$CellContext`sign$, $CellContext`x -> #]& \
+][$CellContext`nodes$]]]}, 
+            AxesLabel -> {"x", "\!\(\*FractionBox[\(dx\), \(dt\)]\)"}]], {
+          FE`r$$1894, -3, 3}]], Attributes[$CellContext`f$] = {Temporary}, 
+       Attributes[$CellContext`sign$] = {Temporary}, 
+       Attributes[$CellContext`nodes$] = {
+        Temporary}, $CellContext`simulateFarmersWarriors = 
+       Function[{$CellContext`alpha, $CellContext`beta, $CellContext`gamma, \
+$CellContext`delta, $CellContext`lambda, $CellContext`sigma, \
+$CellContext`theta, $CellContext`epsilon, $CellContext`stepSize, \
+$CellContext`tMax, $CellContext`F0, $CellContext`Nf0, $CellContext`Nw0}, 
+         Module[{$CellContext`initialState, $CellContext`steps, \
+$CellContext`results, $CellContext`f}, $CellContext`initialState = \
+{$CellContext`F0, $CellContext`Nf0, $CellContext`Nw0}; $CellContext`steps = 
+           Range[0, $CellContext`tMax, $CellContext`stepSize]; $CellContext`f = 
+           Function[$CellContext`state, 
+             $CellContext`farmerWarriorUpdate[$CellContext`state, \
+$CellContext`alpha, $CellContext`beta, $CellContext`gamma, \
+$CellContext`delta, $CellContext`lambda, $CellContext`sigma, \
+$CellContext`theta, $CellContext`epsilon]]; $CellContext`results = 
+           NestList[$CellContext`rk45FarmersWarriors[$CellContext`f, \
+$CellContext`stepSize, #]& , $CellContext`initialState, 
+             Length[$CellContext`steps] - 1]; {$CellContext`steps, 
+            
+            Transpose[$CellContext`results]}]], \
+$CellContext`farmerWarriorUpdate = 
+       Function[{$CellContext`state, $CellContext`alpha, $CellContext`beta, \
+$CellContext`gamma, $CellContext`delta, $CellContext`lambda, \
+$CellContext`sigma, $CellContext`theta, $CellContext`epsilon}, 
+         Module[{$CellContext`F = 
+           Part[$CellContext`state, 1], $CellContext`Nf = 
+           Part[$CellContext`state, 2], $CellContext`Nw = 
+           Part[$CellContext`state, 
+             3], $CellContext`gammaEff, $CellContext`deltaEff, \
+$CellContext`dFdt}, $CellContext`F = 
+           Max[$CellContext`F, 0]; $CellContext`gammaEff = 
+           If[$CellContext`F <= 
+             0, $CellContext`gamma + $CellContext`epsilon, \
+$CellContext`gamma]; $CellContext`deltaEff = 
+           If[$CellContext`F <= 
+             0, $CellContext`delta + $CellContext`epsilon, \
+$CellContext`delta]; $CellContext`dFdt = $CellContext`alpha $CellContext`Nf - \
+$CellContext`beta ($CellContext`Nf + $CellContext`Nw); $CellContext`dFdt = 
+           If[$CellContext`F + $CellContext`dFdt < 
+             0, -$CellContext`F, $CellContext`dFdt]; {$CellContext`dFdt, -
+             If[$CellContext`F > $CellContext`theta, $CellContext`sigma \
+$CellContext`Nf, 
+               0] - $CellContext`gammaEff $CellContext`Nf + \
+$CellContext`lambda ($CellContext`F/(1 + $CellContext`F)), 
+            If[$CellContext`F > $CellContext`theta, $CellContext`sigma \
+$CellContext`Nf, 
+              0] - $CellContext`deltaEff $CellContext`Nw}]], \
+$CellContext`rk45FarmersWarriors = 
+       Function[{$CellContext`f, $CellContext`h, $CellContext`state}, 
+         Module[{$CellContext`k1, $CellContext`k2, $CellContext`k3, \
+$CellContext`k4, $CellContext`k5, $CellContext`k6, $CellContext`newState}, \
+$CellContext`k1 = $CellContext`f[$CellContext`state]; $CellContext`k2 = \
+$CellContext`f[$CellContext`state + $CellContext`h ($CellContext`k1/
+               4)]; $CellContext`k3 = $CellContext`f[$CellContext`state + \
+$CellContext`h ((3 $CellContext`k1 + 9 $CellContext`k2)/
+               32)]; $CellContext`k4 = $CellContext`f[$CellContext`state + \
+$CellContext`h ((1932 $CellContext`k1 - 7200 $CellContext`k2 + 
+                7296 $CellContext`k3)/
+               2197)]; $CellContext`k5 = $CellContext`f[$CellContext`state + \
+$CellContext`h (439 ($CellContext`k1/216) - 8 $CellContext`k2 + 
+               3680 ($CellContext`k3/513) - 
+               845 ($CellContext`k4/
+                4104))]; $CellContext`k6 = $CellContext`f[$CellContext`state + \
+$CellContext`h ((-8) ($CellContext`k1/27) + 2 $CellContext`k2 - 
+               3544 ($CellContext`k3/2565) + 1859 ($CellContext`k4/4104) - 
+               11 ($CellContext`k5/
+                40))]; $CellContext`newState = $CellContext`state + \
+$CellContext`h (16 ($CellContext`k1/135) + 6656 ($CellContext`k3/12825) + 
+              28561 ($CellContext`k4/56430) - 9 ($CellContext`k5/50) + 
+              2 ($CellContext`k6/55)); Part[$CellContext`newState, 1] = Max[
+             Part[$CellContext`newState, 1], 
+             0]; $CellContext`newState]], $CellContext`plotPhaseDiagram = 
+       Function[{$CellContext`alpha, $CellContext`beta, $CellContext`gamma, \
+$CellContext`delta, $CellContext`lambda, $CellContext`sigma, \
+$CellContext`theta, $CellContext`epsilon, $CellContext`stepSize, \
+$CellContext`tMax, $CellContext`F0, $CellContext`Nf0, $CellContext`Nw0}, 
+         Module[{$CellContext`timeData, $CellContext`data, \
+$CellContext`vectorField}, {$CellContext`timeData, $CellContext`data} = \
+$CellContext`simulateFarmersWarriors[$CellContext`alpha, $CellContext`beta, \
+$CellContext`gamma, $CellContext`delta, $CellContext`lambda, \
+$CellContext`sigma, $CellContext`theta, $CellContext`epsilon, \
+$CellContext`stepSize, $CellContext`tMax, $CellContext`F0, $CellContext`Nf0, \
+$CellContext`Nw0]; $CellContext`vectorField = 
+           Function[{$CellContext`F, $CellContext`Nf}, {$CellContext`alpha \
+$CellContext`Nf - $CellContext`beta ($CellContext`Nf + $CellContext`Nw0), -
+               If[$CellContext`F > $CellContext`theta, $CellContext`sigma \
+$CellContext`Nf, 
+                 0] - $CellContext`gamma $CellContext`Nf + \
+$CellContext`lambda ($CellContext`F/(1 + $CellContext`F))}]; Show[
+            StreamPlot[
+             $CellContext`vectorField[$CellContext`F, $CellContext`Nf], \
+{$CellContext`F, 0, 500}, {$CellContext`Nf, 0, 100}, StreamStyle -> 
+             Arrowheads[Small], Frame -> True, 
+             FrameLabel -> {"Food Reserves (F)", "Farmers (Nf)"}, 
+             PlotRange -> {{0, 500}, {0, 100}}, AspectRatio -> 2/3], 
+            Graphics[{Thick, Red, 
+              Line[
+               Transpose[{
+                 Part[$CellContext`data, 1], 
+                 Part[$CellContext`data, 2]}]]}]]]]}; 
+     Typeset`initDone$$ = True),
+    SynchronousInitialization->True,
+    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{3.942552867449378*^9, 3.942553360310857*^9},
+ CellLabel->
+  "Out[141]=",ExpressionUUID->"1f42c9db-0cc7-4ef1-a530-70e7bdd59009"]
+}, Open  ]]
+},
+WindowSize->{Full, Full},
+WindowMargins->{{1316, Automatic}, {Automatic, 238}},
+Magnification->1.5,
+FrontEndVersion->"14.1 for Mac OS X ARM (64-bit) (July 16, 2024)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"775ebf5e-28e8-4c6b-ae4d-78b33206f867"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[576, 22, 22429, 535, 3873, "Input",ExpressionUUID->"169d5835-bea0-4fd7-b917-906bbd018377"],
+Cell[23008, 559, 14175, 253, 1412, "Output",ExpressionUUID->"1f42c9db-0cc7-4ef1-a530-70e7bdd59009"]
+}, Open  ]]
+}
+]
+*)
+
